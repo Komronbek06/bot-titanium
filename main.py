@@ -1,25 +1,22 @@
-import logging
-from aiogram import Bot, Dispatcher, executor, types
-import os
+import asyncio
+from aiogram import Bot, Dispatcher
+from aiogram.types import Message
 
-# Tokenni os.environ orqali olamiz (Railway uchun qulay)
+# Tokenni ENV dan olish
+import os
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-# Botni sozlash
-logging.basicConfig(level=logging.INFO)
 bot = Bot(token=BOT_TOKEN)
-dp = Dispatcher(bot)
+dp = Dispatcher()
 
-# Start komandasi
-@dp.message_handler(commands=["start"])
-async def start_cmd(message: types.Message):
-    await message.answer("Assalomu alaykum! ✅ Bot ishlayapti.")
+# /start komandasi
+@dp.message(commands=["start"])
+async def start_handler(message: Message):
+    await message.answer("Salom! 👋 Men Aiogram 3.x botman.")
 
-# Oddiy echo (yuborgan narsangni qaytaradi)
-@dp.message_handler()
-async def echo(message: types.Message):
-    await message.answer(message.text)
+async def main():
+    # Pollingni ishga tushiramiz
+    await dp.start_polling(bot)
 
-# Ishga tushirish
 if __name__ == "__main__":
-    executor.start_polling(dp, skip_updates=True)
+    asyncio.run(main())
